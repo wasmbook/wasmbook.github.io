@@ -1,4 +1,5 @@
 [book]
-authors = []
+authors = ["Ilya Druzhinin"]
 multilingual = false
 src = "src"
+title = "Wasm Book"
