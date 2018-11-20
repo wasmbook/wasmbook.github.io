@@ -7,30 +7,20 @@
 
 ## Ловушки
 
-Whenever WebAssembly semantics specify a [trap](Semantics.md#traps),
-a `WebAssembly.RuntimeError` object is thrown. WebAssembly code (currently)
-has no way to catch this exception and thus the exception will necessarily
-propagate to the enclosing non-WebAssembly caller (either the browser or
-JavaScript) where it is handled like a normal JavaScript exception.
+Всякий раз, когда семантика WebAssembly определяет [ловушку](5-semantics.md#traps). Возникает ошибка выполнения объекта `WebAssembly.RuntimeError`. Код WebAssembly (в настоящее время) не имеет возможности перехватить это исключение, и, таким образом, исключение будет обязательно распространяться на включающего не WebAssembly вызывающего (либо браузер или JavaScript), где он обрабатывается как обычное исключение JavaScript.
 
-If WebAssembly calls JavaScript via import and the JavaScript throws an
-exception, the exception is propagated through the WebAssembly activation to the
-enclosing caller.
+Если WebAssembly вызываетяся из JavaScript с помощью импорта, а JavaScript создает исключение, исключение передается через активацию WebAssembly включающему вызывающему объекту.
 
-Because JavaScript exceptions can be handled, and JavaScript can continue to
-call WebAssembly exports after a trap has been handled, traps do not, in
-general, prevent future execution.
+Поскольку исключения JavaScript могут быть обработаны, и JavaScript может продолжать вызывать экспорт WebAssembly после обработки ловушки, ловушки, как правило, не препятствуют будущему выполнению.
 
 ## Stack Overflow
 
-Whenever a [stack overflow](Semantics.md#stack-overflow) is happening in
-WebAssembly code, the same exception is thrown as for a stack overflow in
-JavaScript.
+Всякий раз, когда [stack overflow](5-semantics.md#stack-overflow) происходит в коде WebAssembly, то же исключение выдается как для переполнения стека в JavaScript.
 
 ## Недостаточно памяти
 
-Whenever validation, compilation or instantiation run out of memory, the
-same exception is thrown as for out of memory conditions in JavaScript.
+Whenever validation, compilation or instantiation run out of memory, the same exception is thrown as for out of memory conditions in JavaScript.
+Всякий раз, когда проверка, обобщение или конкретизация запустить из памяти, такое же исключение, как для из памяти в JavaScript.
 
 ## The `WebAssembly` object
 
@@ -185,11 +175,11 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
 1. The byte range delimited by the `BufferSource` is first logically decoded 
    according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
    according to the rules in [spec/valid.ml](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L415).
-1. The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
+2. The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
    [Web.md](Web.md#names).
-1. On success, a new `WebAssembly.Module` object is returned with [[Module]] set to
+3. On success, a new `WebAssembly.Module` object is returned with [[Module]] set to
    the validated `Ast.module`.
-1. On failure, a new `WebAssembly.CompileError` is thrown.
+4. On failure, a new `WebAssembly.CompileError` is thrown.
 
 ### `WebAssembly.Module.prototype [ @@toStringTag ]` Property
 
