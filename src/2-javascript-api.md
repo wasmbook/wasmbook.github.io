@@ -1,15 +1,11 @@
 # JavaScript API
 
-In the [MVP](MVP.md), the only way to access WebAssembly on the Web is through
-an explicit JS API which is defined below.
-(In the [future :unicorn:][future general], WebAssembly may also
-be loaded and run directly from an HTML `<script type='module'>` tag—and
-any other Web API that loads ES6 modules via URL—as part of 
-[ES6 Module integration](Modules.md#integration-with-es6-modules).)
+В [MVP](9-mvp.md), единственным способом доступа к WebAssembly в Интернете является JS API, который определен ниже.
+(В будущем, WebAssembly может быть также быть загружен и запущщен напрямую через HTML меткой `<script type='module'>` и любого другого веб-API, который загружает модули ES6 через url [ES6 Module integration](6-modules.md#integration-with-es6-modules).)
 
-WebAssembly JS API declaration file for TypeScript can be found [here](https://github.com/01alchemist/webassembly-types/blob/master/webassembly.d.ts) which enable autocompletion and make TypeScript compiler happy.
+Файл определения WebAssembly JS API для TypeScript может быть найден [здесь]https://github.com/01alchemist/webassembly-types/blob/master/webassembly.d.ts), который включает автодополнение и делает компилятор TypeScript счастливым.
 
-## Traps
+## Ловушки
 
 Whenever WebAssembly semantics specify a [trap](Semantics.md#traps),
 a `WebAssembly.RuntimeError` object is thrown. WebAssembly code (currently)
@@ -31,7 +27,7 @@ Whenever a [stack overflow](Semantics.md#stack-overflow) is happening in
 WebAssembly code, the same exception is thrown as for a stack overflow in
 JavaScript.
 
-## Out of Memory
+## Недостаточно памяти
 
 Whenever validation, compilation or instantiation run out of memory, the
 same exception is thrown as for out of memory conditions in JavaScript.
