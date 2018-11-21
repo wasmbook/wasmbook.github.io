@@ -1,10 +1,10 @@
-# WebAssembly Design
+# Проектирование WebAssembly
 
 This repository contains documents describing the design and high-level overview of WebAssembly.
 
 The documents and discussions in this repository are part of the [WebAssembly Community Group](https://www.w3.org/community/webassembly/).
 
-## Overview
+## Обзор
 
 WebAssembly or wasm is a new, portable, size- and load-time-efficient format suitable for compilation to the web.
 
@@ -18,13 +18,13 @@ WebAssembly is currently being designed as an open standard by a [W3C Community 
 
 - **WebAssembly is part of the open web platform**: WebAssembly is designed to maintain the versionless, feature-tested, and backwards-compatible [nature of the web](Web.md). WebAssembly modules will be able to call into and out of the JavaScript context and access browser functionality through the same Web APIs accessible from JavaScript. WebAssembly also supports [non-web](NonWeb.md) embeddings.
 
-## More Information
+## Больше информации
 
-| Resource                                   | Repository Location      |
+| Ресурсы                                   | Ссылка      |
 |--------------------------------------------|--------------------------|
-| High Level Goals                           | [design/HighLevelGoals.md](HighLevelGoals.md) |
-| Frequently Asked Questions                 | [design/FAQ.md](FAQ.md)            |
-| Language Specification                     | [spec/README.md](https://github.com/WebAssembly/spec)           |
+| Высокоуровневые цели                           | [design/HighLevelGoals.md](./1-goals.md) |
+| Частые вопрос                 | [design/FAQ.md](./7-faq.md)            |
+| Спецификация языка                     | [spec/README.md](https://github.com/WebAssembly/spec)           |
 
 ## Design Process & Contributing
 
@@ -35,7 +35,7 @@ We've mapped out features we expect to ship:
  1. An initial [Minimum Viable Product (MVP)](MVP.md) release;
  2. And soon after in [future versions][future general].
 
-Join us:
+Присоединяйтесь к нам:
 
  * In the [W3C Community Group](https://www.w3.org/community/webassembly/)
  

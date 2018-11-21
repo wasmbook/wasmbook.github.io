@@ -19,22 +19,17 @@
 
 ## Недостаточно памяти
 
-Whenever validation, compilation or instantiation run out of memory, the same exception is thrown as for out of memory conditions in JavaScript.
-Всякий раз, когда проверка, обобщение или конкретизация запустить из памяти, такое же исключение, как для из памяти в JavaScript.
+Всякий раз, когда валидация, компиляция и инстанцированию не хватает памяти, такое же исключение всплывает, как это происходит при недостатки памяти в JavaScript.
 
 ## The `WebAssembly` object
 
-The `WebAssembly` object is the initial value of the `WebAssembly` property of
-the global object. Like the `Math` and `JSON` objects, the `WebAssembly` object
-is a plain JS object (not a constructor or function) that acts like a namespace
-and has the following properties:
+`WebAssembly` объект является начальным значением свойства `WebAssembly` глобального объекта. Как и объекты `Math` и `JSON`, объект `WebAssembly` является простым объектом JS (не конструктором или функцией), который действует как пространство имен и имеет следующие свойства:
 
-### `WebAssembly [ @@toStringTag ]` Property
+### `WebAssembly [ @@toStringTag ]` свойство
 
-The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols)
-property is the String value `"WebAssembly"`.
+Начальное значение свойства [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols) является строкой со значением `"WebAssembly"`.
 
-This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
+Это свойство имеет атрибуты { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
 
 ### Constructor Properties of the `WebAssembly` object
 
@@ -61,12 +56,9 @@ The `validate` function has the signature:
 Boolean validate(BufferSource bytes)
 ```
 
-If the given `bytes` argument is not a
-[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
-then a `TypeError` is thrown.
+If the given `bytes` argument is not a [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource), then a `TypeError` is thrown.
 
-Otherwise, this function performs *validation* as defined by the [WebAssembly
-specification](https://github.com/WebAssembly/spec/blob/master/interpreter/) and returns `true` if validation succeeded, `false` if validation failed.
+Otherwise, this function performs *validation* as defined by the [WebAssembly specification](https://github.com/WebAssembly/spec/blob/master/interpreter/) and returns `true` if validation succeeded, `false` if validation failed.
 
 #### `WebAssembly.compile`
 
@@ -76,21 +68,12 @@ The `compile` function has the signature:
 Promise<WebAssembly.Module> compile(BufferSource bytes)
 ```
 
-If the given `bytes` argument is not a
-[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
-the returned `Promise` is [rejected](https://tc39.github.io/ecma262/#sec-rejectpromise)
-with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+If the given `bytes` argument is not a [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource), the returned `Promise` is [rejected](https://tc39.github.io/ecma262/#sec-rejectpromise) with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
-Otherwise, this function starts an asynchronous task to compile a `WebAssembly.Module`
-as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
-On success, the `Promise` is [fulfilled](https://tc39.github.io/ecma262/#sec-fulfillpromise)
-with the resulting `WebAssembly.Module` object. On failure, the `Promise` is 
-[rejected](https://tc39.github.io/ecma262/#sec-rejectpromise) with a 
-`WebAssembly.CompileError`.
+Otherwise, this function starts an asynchronous task to compile a `WebAssembly.Module` as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
+On success, the `Promise` is [fulfilled](https://tc39.github.io/ecma262/#sec-fulfillpromise) with the resulting `WebAssembly.Module` object. On failure, the `Promise` is [rejected](https://tc39.github.io/ecma262/#sec-rejectpromise) with a `WebAssembly.CompileError`.
 
-The asynchronous compilation is logically performed on a copy of the state of
-the given `BufferSource` captured during the call to `compile`; subsequent mutations
-of the `BufferSource` after `compile` return do not affect ongoing compilations.
+The asynchronous compilation is logically performed on a copy of the state of the given `BufferSource` captured during the call to `compile`; subsequent mutations of the `BufferSource` after `compile` return do not affect ongoing compilations.
 
 #### `WebAssembly.instantiate`
 
