@@ -21,44 +21,44 @@
 
 Всякий раз, когда валидация, компиляция и инстанцированию не хватает памяти, такое же исключение всплывает, как это происходит при недостатки памяти в JavaScript.
 
-## The `WebAssembly` object
+## Объект `WebAssembly`
 
 `WebAssembly` объект является начальным значением свойства `WebAssembly` глобального объекта. Как и объекты `Math` и `JSON`, объект `WebAssembly` является простым объектом JS (не конструктором или функцией), который действует как пространство имен и имеет следующие свойства:
 
-### `WebAssembly [ @@toStringTag ]` свойство
+### Свойства WebAssembly [ @@toStringTag ]
 
 Начальное значение свойства [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols) является строкой со значением `"WebAssembly"`.
 
 Это свойство имеет атрибуты { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
 
-### Constructor Properties of the `WebAssembly` object
+### Конструктор свойств объекта `WebAssembly`
 
-The following intrinsic objects are added:
+Добавлены следующие  внутренние объекты:
 
-* `WebAssembly.Module` : the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
-* `WebAssembly.Instance` : the [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor)
-* `WebAssembly.Memory` : the [`WebAssembly.Memory` constructor](#webassemblymemory-constructor)
-* `WebAssembly.Table` : the [`WebAssembly.Table` constructor](#webassemblytable-constructor)
-* `WebAssembly.CompileError` : a [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
-   which indicates an error during WebAssembly decoding or validation
-* `WebAssembly.LinkError` : a [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
-   which indicates an error during WebAssembly instantiating a module (other than traps from the start function)
-* `WebAssembly.RuntimeError` : a [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
-   which is thrown whenever WebAssembly specifies a [trap](#traps).
+* `WebAssembly.Module` : [конструктор `WebAssembly.Module`](#webassemblymodule-constructor)
+* `WebAssembly.Instance` : [конструктор `WebAssembly.Instance`](#webassemblyinstance-constructor)
+* `WebAssembly.Memory` : [конструктор `WebAssembly.Memory`](#webassemblymemory-constructor)
+* `WebAssembly.Table` : [конструктор `WebAssembly.Table`](#webassemblytable-constructor)
+* `WebAssembly.CompileError` : [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+   который указывает на ошибку при декодировании или валидации WebAssembly
+* `WebAssembly.LinkError` : [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+   который указывает на ошибку во время создания экземпляра WebAssembly модуля (кроме ловушек(traps) функции start)
+* `WebAssembly.RuntimeError` : [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+   который вызывается всякий раз когда WebAssembly задает [trap](#traps).
 
-### Function Properties of the `WebAssembly` object
+### Свойства функции объекта `WebAssembly`
 
 #### `WebAssembly.validate`
 
-The `validate` function has the signature:
+Функция `validate` имеет сигнатуру:
 
 ```
 Boolean validate(BufferSource bytes)
 ```
 
-If the given `bytes` argument is not a [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource), then a `TypeError` is thrown.
+Если данный аргумент `bytes` не является [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource), тогда вызывается `TypeError`.
 
-Otherwise, this function performs *validation* as defined by the [WebAssembly specification](https://github.com/WebAssembly/spec/blob/master/interpreter/) and returns `true` if validation succeeded, `false` if validation failed.
+В противном случае, функция выполняет *валидацию - validation* как определенно в [Спецификации WebAssembly](https://github.com/WebAssembly/spec/blob/master/interpreter/) и возвращает `true`, если валидация прошла успешно, `false`, если проверка не прошла.
 
 #### `WebAssembly.compile`
 
