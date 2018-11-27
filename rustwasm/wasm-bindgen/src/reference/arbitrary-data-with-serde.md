@@ -74,10 +74,9 @@ pub fn send_example_to_js() -> JsValue {
 }
 ```
 
-## Receive it from JavaScript with `JsValue::into_serde`
+## Получите его из JavaScript с `JsValue::into_serde`
 
-Here's a function that will receive a `JsValue` parameter from JavaScript and
-then deserialize an `Example` from it:
+Вот функция, которая получит параметр `JsValue` из JavaScript и затем десерализует из него `Example`:
 
 ```rust
 #[wasm_bindgen]

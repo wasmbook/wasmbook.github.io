@@ -1,13 +1,8 @@
-# Exporting a struct to JS
+# Экспорт структуры в JS
 
-So far we've covered JS objects, importing functions, and exporting functions.
-This has given us quite a rich base to build on so far, and that's great! We
-sometimes, though, want to go even further and define a JS `class` in Rust. Or
-in other words, we want to expose an object with methods from Rust to JS rather
-than just importing/exporting free functions.
+До сих пор мы рассматривали объекты JS, импортировали функции и экспортировали функции. Это дало нам довольно богатую базу для развития. Хотя мы иногда хотим пойти дальше и определить JS `class` в Rust. Или же другими словами, мы хотим выставить объект с методами из Rust в JS, а не просто импортировать\экспортировать свободные функции.
 
-The `#[wasm_bindgen]` attribute can annotate both a `struct` and `impl` blocks
-to allow:
+Атрибут `#[wasm_bindgen]` может анотировать оба блока и `struct` и `impl`, которые позволяют:
 
 ```rust
 #[wasm_bindgen]
@@ -31,12 +26,7 @@ impl Foo {
 }
 ```
 
-This is a typical Rust `struct` definition for a type with a constructor and a
-few methods. Annotating the struct with `#[wasm_bindgen]` means that we'll
-generate necessary trait impls to convert this type to/from the JS boundary. The
-annotated `impl` block here means that the functions inside will also be made
-available to JS through generated shims. If we take a look at the generated JS
-code for this we'll see:
+В этом, достаточно типичном для Rust определения `структуры` для типа с конструктооом и несколькими методами. Анотирование структуры с помощью `#[wasm_bindgen]` значит, что мы будем генерировать необходимые трейты для преобразования этого типа в границы или из границ JS. Анотированный блок `impl` здесь означает, что функции внутри также будут сделаны доступны для JS с помощью сгененрированых прокладок. Если мы посмотрим на сгенерированный JS код, то мы увидим:
 
 ```js
 import * as wasm from './js_hello_world_bg';
@@ -73,26 +63,20 @@ export class Foo {
 }
 ```
 
-That's actually not much! We can see here though how we've translated from Rust
-to JS:
+Мы можем увить здесь всё то, что мы перевели с Rust на JS:
 
-* Associated functions in Rust (those without `self`) turn into `static`
-  functions in JS.
-* Methods in Rust turn into methods in wasm.
-* Manual memory management is exposed in JS as well. The `free` function is
-  required to be invoked to deallocate resources on the Rust side of things.
+* Связанные функции в Rust (без `self`) превращаются в `static` функции в JS.
+* Методы в Rust превращабтся в методы wasm.
+* Ручное управление памятью также отобпражается в JS. Функция `free` является необходимой для вызова для освобождения ресурсов со стороны Rust.
 
-To be able to use `new Foo()`, you'd need to annotate `new` as `#[wasm_bindgen(constructor)]`.
+Чтобы иметь возможность использовать `new Foo()`, вы должны аннотировать `new` как `#[wasm_bindgen(constructor)]`.
 
-One important aspect to note here, though, is that once `free` is called the JS
-object is "neutered" in that its internal pointer is nulled out. This means that
-future usage of this object should trigger a panic in Rust.
+Однако один важный аспект заключается в том, что после того, как `free` вызывается объектом JS, он "стерилизуется", поскольку его внутренний указатель обнуляется. Это значит, что будущее использование объекта, должно вызывать панику в Rust.
 
-The real trickery with these bindings ends up happening in Rust, however, so
-let's take a look at that.
+Однако реальная хитрость с этими биндингами заканчивается в Rust, поэтому давайте посмотрим на это.
 
 ```rust
-// original input to `#[wasm_bindgen]` omitted ...
+// исходный ввод в `#[wasm_bindgen]` опущен ...
 
 #[export_name = "foo_new"]
 pub extern fn __wasm_bindgen_generated_Foo_new(arg0: i32) -> u32

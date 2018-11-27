@@ -6,17 +6,9 @@ running over the syntactical (unresolved) structure of the Rust code and is then
 responsible for generating information that `wasm-bindgen` the CLI tool later
 reads.
 
-To accomplish this a slightly unconventional approach is taken. Static
-information about the structure of the Rust code is serialized via JSON
-(currently) to a custom section of the wasm executable. Other information, like
-what the types actually are, unfortunately isn't known until later in the
-compiler due to things like associated type projections and typedefs. It also
-turns out that we want to convey "rich" types like `FnMut(String, Foo,
-&JsValue)` to the `wasm-bindgen` CLI, and handling all this is pretty tricky!
+Для этого используется несколько нетрадиционный подход. Статическая информация о структуре кода Rust сереализуется через JSON (в настоящий момент) в кастомнуый раздел исполняемого файла wasm. Другая информация, например какие типы на самом деле есть, к сожалению, не известна до конца в компиляторе из-за таких штук, как связанные проекции типов и typedefs. Также выясняется что мы хотим передать "богатые" типы, такие как `FnMut(String, Foo, &JsValue)` в CLI `wasm-bindgen`, и обработка всего этого очень сложна.
 
-To solve this issue the `#[wasm_bindgen]` macro generates **executable
-functions** which "describe the type signature of an import or export". These
-executable functions are what the `WasmDescribe` trait is all about:
+Для решения этой проблемы макрос `#[wasm_bindgen]` генерирует **исполняемые функции**, которые "описывают сигнатуру типа импорта или экспорта". Эти исполняемые функции это как раз всё то о чем говорит `WasmDescribe`:
 
 ```rust
 pub trait WasmDescribe {
