@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Всё о WebAssembly и Rust</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <base href="">
+
+        <link rel="stylesheet" href="book.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
+
+    </head>
+    <body class="light">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            document.querySelector('html').classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Введение</a></li><li><a href="wasm-design/src/README.html"><strong aria-hidden="true">1.</strong> Спецификация WebAssembly</a></li><li><ol class="section"><li><a href="wasm-design/src/1-goals.html"><strong aria-hidden="true">1.1.</strong> Цели WebAssembly</a></li><li class="spacer"></li></ol></li><li><a href="rustwasm/book/README.html"><strong aria-hidden="true">3.</strong> Rust и WebAssembly</a></li><li><ol class="section"><li><a href="rustwasm/book/src/introduction.html"><strong aria-hidden="true">3.1.</strong> Введение!</a></li><li class="spacer"></li></ol></li><li><a href="rustwasm/wasm-bindgen/src/introduction.html"><strong aria-hidden="true">5.</strong> Rust: wasm-bindgen</a></li><li><ol class="section"><li><a href="rustwasm/wasm-bindgen/src/whirlwind-tour/introduction.html"><strong aria-hidden="true">5.1.</strong> Пример Whirlwind</a></li><li class="spacer"></li></ol></li><li><a href="rustwasm/wasm-pack/src/tutorial/index.html"><strong aria-hidden="true">7.</strong> Rust: wasm-pack</a></li><li><ol class="section"><li><a href="rustwasm/wasm-pack/src/prerequisites/index.html"><strong aria-hidden="true">7.1.</strong> Предварительные требования</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="submenu">
+                                <li><button class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li><button class="theme" id="rust">Rust</button></li>
+                                <li><button class="theme" id="coal">Coal</button></li>
+                                <li><button class="theme" id="navy">Navy</button></li>
+                                <li><button class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                        </div>
+
+                        <h1 class="menu-title">Всё о WebAssembly и Rust</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="print.html#Предисловие" id="Предисловие"><h1>Предисловие</h1></a>
+<p>В данном репозитории я перевожу мануалы по rust и webassembly. Если хотите помочь, то присоединятесь.</p>
+<p><a href="http://github.com/krondev">http://github.com/krondev</a></p>
+<a class="header" href="print.html#Спецификация-webassembly" id="Спецификация-webassembly"><h1>Спецификация WebAssembly</h1></a>
+<p>Link: https://github.com/WebAssembly/design</p>
+<a class="header" href="print.html#Главные-цели-webassembly" id="Главные-цели-webassembly"><h1>Главные цели WebAssembly</h1></a>
+<ol>
+<li>
+<p>Определить <a href="https://webassembly.org/docs/portability/">преносимый</a>, эфективный по размеру и времени закгрузки <a href="https://webassembly.org/docs/mvp/#binary-format">двоичный формат</a>, который будет целью для компиляции, и может быть скомпилированым для выолнения на собственной скорости с использованием общих аппаратных возможностей, доступный на широком спекте платформы, включая мобильные устройсвта и интернет вещей</p>
+</li>
+<li>
+<p>Пошаговая спецификация и реализация:</p>
+</li>
+</ol>
+<ul>
+<li>
+<p><a href="https://webassembly.org/docs/mvp/">Minimum Viable Product</a> (MVP) для стандарта с приблизительно похожей функциональности как в <a href="http://asmjs.org/">asm.js</a>, главным образом направленная на <a href="https://webassembly.org/docs/c-and-c++/">C/C++</a>;</p>
+</li>
+<li>
+<p><a href="https://webassembly.org/docs/future-features/">дополнительные функции</a> - изначально ориентированные на ключевые функции, такие как <a href="https://github.com/WebAssembly/design/issues/1073">потоки</a>, <a href="https://github.com/WebAssembly/design/issues/1078">исключения с нулевой стоимостью</a>, и <a href="https://github.com/WebAssembly/design/issues/1075">SIMD</a>, а затем дополнительные функции, приоритетные по откхывам и включащие поддержку языков, отличных от C/C++.</p>
+</li>
+</ul>
+<ol start="3">
+<li>Спроектировано для выполнения внутри и с интеграцией с существующей <a href="https://webassembly.org/docs/web/">веб-платформой</a>:</li>
+</ol>
+<ul>
+<li>
+<p>maintain the versionless, <a href="https://webassembly.org/docs/feature-test/">feature-tested</a> и обратной совсместимости в эволюции в веб;</p>
+</li>
+<li>
+<p>исполнение в том же семантическом пространстве, что и JavaScript;</p>
+</li>
+<li>
+<p>позволять синхронные вызовы в и из JavaScript;</p>
+</li>
+<li>
+<p>осуществить единство проихождения (same-origin) и разрешений политик безопасности;</p>
+</li>
+<li>
+<p>доступ к функциональности браузера через теже веб API, которые доступны JavaScript;</p>
+</li>
+<li>
+<p>определить редактируемый человеком текстовый формат, который конвертируется в двоичный формат и из него, поддерживая фукнциональность View Source.</p>
+</li>
+</ul>
+<ol start="4">
+<li>
+<p>Проектировно для поддержки <a href="https://webassembly.org/docs/non-web/">внебразуерного</a> встраивания.</p>
+</li>
+<li>
+<p>Создание великой платформы:</p>
+</li>
+</ol>
+<ul>
+<li>построить новый LLVM бэкенд для WebAssembly и сопутсвующее портирование clang (<a href="https://webassembly.org/docs/faq/#which-compilers-can-i-use-to-build-webassembly-programs">почему LLVM первый?</a>);</li>
+<li>продвижение других компиляторов и инструментов ориентированных на WebAssembly;</li>
+<li>включить другие полезные <a href="https://webassembly.org/docs/tooling/">инструменты</a>.</li>
+</ul>
+<a class="header" href="print.html#the-rust-and-webassembly-book" id="the-rust-and-webassembly-book"><h1>The Rust and WebAssembly Book</h1></a>
+<p>This repo contains documentation on using Rust for wasm, common workflows, how
+to get started and more. It acts as a guide for how to do some neat things with
+it.</p>
+<p>If you would like to start learning how to use Rust and WebAssembly together
+immediately, you can read the book <a href="https://rustwasm.github.io/book/game-of-life/introduction.html">online here</a>.</p>
+<p><a href="https://github.com/rustwasm/book/issues">Open issues for improving the Rust and WebAssembly book.</a></p>
+<a class="header" href="print.html#building-the-book" id="building-the-book"><h2>Building the Book</h2></a>
+<p>The book is made using <a href="https://github.com/rust-lang-nursery/mdBook"><code>mdbook</code></a>. To install it you'll need <code>cargo</code>
+installed. If you don't have any Rust tooling installed, you'll need to install
+<a href="https://github.com/rust-lang-nursery/rustup.rs/"><code>rustup</code></a> first. Follow the instructions on the site in order to get
+setup.</p>
+<p>Once you have that done then just do the following:</p>
+<pre><code class="language-bash">$ cargo install mdbook
+</code></pre>
+<p>Make sure the <code>cargo install</code> directory is in your <code>$PATH</code> so that you can run
+the binary.</p>
+<p>Now just run this command from this directory:</p>
+<pre><code class="language-bash">$ mdbook build
+</code></pre>
+<p>This will build the book and output files into a directory called <code>book</code>. From
+there you can navigate to the <code>index.html</code> file to view it in your browser. You
+could also run the following command to automatically generate changes if you
+want to look at changes you might be making to it:</p>
+<pre><code class="language-bash">$ mdbook serve
+</code></pre>
+<p>This will automatically generate the files as you make changes and serves them
+locally so you can view them easily without having to call <code>build</code> every time.</p>
+<p>The files are all written in Markdown so if you don't want to generate the book
+to read them then you can read them from the <code>src</code> directory.</p>
+<a class="header" href="print.html#rust--and-webassembly-" id="rust--and-webassembly-"><h1>Rust 🦀 and WebAssembly 🕸</h1></a>
+<p>This small book describes how to use <a href="https://www.rust-lang.org">Rust</a> and <a href="https://webassembly.org/">WebAssembly</a> together.</p>
+<a class="header" href="print.html#who-is-this-book-for" id="who-is-this-book-for"><h2>Who is this book for?</h2></a>
+<p>This book is for anyone interested in compiling Rust to WebAssembly for fast,
+reliable code on the Web. You should know some Rust, and be familiar with
+JavaScript, HTML, and CSS. You don't need to be an expert in any of them.</p>
+<p>Don't know Rust yet? <a href="https://doc.rust-lang.org/book/2018-edition/index.html">Start with <em>The Rust Programming Language</em> first.</a></p>
+<p>Don't know JavaScript, HTML, or CSS? <a href="https://developer.mozilla.org/en-US/docs/Learn">Learn about them on MDN.</a></p>
+<a class="header" href="print.html#how-to-read-this-book" id="how-to-read-this-book"><h2>How to read this book</h2></a>
+<p>You should read <a href="./why-rust-and-webassembly.html">the motivation for using Rust and WebAssembly
+together</a>, as well as familiarize yourself with the <a href="./background-and-concepts.html">background
+and concepts</a> first.</p>
+<p>The <a href="./game-of-life/introduction.html">tutorial</a> is written to be read from start to finish. You should follow
+along: writing, compiling, and running the tutorial's code yourself. If you
+haven't used Rust and WebAssembly together before, do the tutorial!</p>
+<p>The <a href="./reference/index.html">reference sections</a> may be perused in any order.</p>
+<blockquote>
+<p><strong>💡 Tip:</strong> You can search through this book by clicking on the 🔍 icon at the
+top of the page, or by pressing the <code>s</code> key.</p>
+</blockquote>
+<a class="header" href="print.html#contributing-to-this-book" id="contributing-to-this-book"><h2>Contributing to this book</h2></a>
+<p>This book is open source! Find a typo? Did we overlook something? <a href="https://github.com/rustwasm/book"><strong>Send us a
+pull request!</strong></a></p>
+<a class="header" href="print.html#introduction" id="introduction"><h1>Introduction</h1></a>
+<p><code>wasm-bindgen</code> facilitates high-level interactions between wasm modules and
+JavaScript.</p>
+<p>This project is sort of half polyfill for features like the <a href="https://github.com/WebAssembly/host-bindings">host bindings
+proposal</a> and half features for empowering high-level interactions between
+JS and wasm-compiled code (currently mostly from Rust). More specifically this
+project allows JS/wasm to communicate with strings, JS objects, classes, etc, as
+opposed to purely integers and floats. Using <code>wasm-bindgen</code> for example you can
+define a JS class in Rust or take a string from JS or return one. The
+functionality is growing as well!</p>
+<p>Currently this tool is Rust-focused but the underlying foundation is
+language-independent, and it's hoping that over time as this tool stabilizes
+that it can be used for languages like C/C++!</p>
+<p>Notable features of this project includes:</p>
+<ul>
+<li>Importing JS functionality in to Rust such as <a href="https://github.com/rustwasm/wasm-bindgen/tree/master/examples/dom">DOM manipulation</a>,
+<a href="https://github.com/rustwasm/wasm-bindgen/tree/master/examples/console_log">console logging</a>, or <a href="https://github.com/rustwasm/wasm-bindgen/tree/master/examples/performance">performance monitoring</a>.</li>
+<li>Exporting Rust functionality to JS such as classes, functions, etc.</li>
+<li>Working with rich types like strings, numbers, classes, closures, and objects
+rather than simply <code>u32</code> and floats.</li>
+</ul>
+<p>This project is still relatively new but feedback is of course always
+welcome! If you're curious about the design plus even more information about
+what this crate can do, check out the <a href="https://rustwasm.github.io/wasm-bindgen/contributing/design/index.html">design doc</a>.</p>
+<a class="header" href="print.html#Пример-whirlwind" id="Пример-whirlwind"><h1>Пример Whirlwind</h1></a>
+<a class="header" href="print.html#tutorial" id="tutorial"><h1>Tutorial</h1></a>
+<p>The goal of this tutorial is to introduce you to the <code>wasm-pack</code> workflow.</p>
+<p>This tutorial is aimed at folks who are both beginners to WebAssembly and Rust- you don't need
+much Rust knowledge to complete this tutorial.</p>
+<p>Be sure to have done the following before starting:</p>
+<ol>
+<li>
+<p><a href="../../installer">Install <code>wasm-pack</code></a></p>
+</li>
+<li>
+<p>Read and install the <a href="../prerequisites/index.html">Prerequisites</a>.</p>
+<ul>
+<li>You'll need <a href="https://www.rust-lang.org">Rust</a>, version 1.30 or higher. (Currently either <code>beta</code> or <code>nightly</code> channels). <a href="../project-setup/rust.html">Learn more</a>.</li>
+<li>You'll need <a href="https://nodejs.org">Node.js</a> and <a href="https://npmjs.com">npm</a> installed. You'll also need an npm Account. <a href="../project-setup/npm.html">Learn more</a>.</li>
+</ul>
+</li>
+</ol>
+<p>⚠️ We strongly recommend that you install <a href="https://nodejs.org">Node.js</a> using a version manager. You can learn more <a href="https://npmjs.com/get-npm">here</a>.</p>
+<a class="header" href="print.html#prerequisites" id="prerequisites"><h1>Prerequisites</h1></a>
+<p>To run <code>wasm-pack</code> you'll need to have both Rust and npm installed and configured.</p>
+<ul>
+<li><a href="./rust.html">Rust</a></li>
+<li><a href="./npm.html">npm</a></li>
+</ul>
+<p>In the future, we intend to rewrite the npm registry client bits so that the need
+for a Node runtime is eliminated. If you're excited about that work- you should
+reach out to the maintainers and get involved!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if (getComputedStyle(document.querySelector(".fa")).fontFamily !== "FontAwesome") {
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = '_FontAwesome/css/font-awesome.css';
+                document.head.insertBefore(link, document.head.firstChild)
+            }
+        </script>
+
+        
+
+        
+
+        
+
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                window.print();
+            })
+        </script>
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
+    </body>
+</html>

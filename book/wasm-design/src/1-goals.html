@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Цели WebAssembly - Всё о WebAssembly и Rust</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <base href="../../">
+
+        <link rel="stylesheet" href="book.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
+
+    </head>
+    <body class="light">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            document.querySelector('html').classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="introduction.html">Введение</a></li><li><a href="wasm-design/src/README.html"><strong aria-hidden="true">1.</strong> Спецификация WebAssembly</a></li><li><ol class="section"><li><a href="wasm-design/src/1-goals.html" class="active"><strong aria-hidden="true">1.1.</strong> Цели WebAssembly</a></li><li class="spacer"></li></ol></li><li><a href="rustwasm/book/README.html"><strong aria-hidden="true">3.</strong> Rust и WebAssembly</a></li><li><ol class="section"><li><a href="rustwasm/book/src/introduction.html"><strong aria-hidden="true">3.1.</strong> Введение!</a></li><li class="spacer"></li></ol></li><li><a href="rustwasm/wasm-bindgen/src/introduction.html"><strong aria-hidden="true">5.</strong> Rust: wasm-bindgen</a></li><li><ol class="section"><li><a href="rustwasm/wasm-bindgen/src/whirlwind-tour/introduction.html"><strong aria-hidden="true">5.1.</strong> Пример Whirlwind</a></li><li class="spacer"></li></ol></li><li><a href="rustwasm/wasm-pack/src/tutorial/index.html"><strong aria-hidden="true">7.</strong> Rust: wasm-pack</a></li><li><ol class="section"><li><a href="rustwasm/wasm-pack/src/prerequisites/index.html"><strong aria-hidden="true">7.1.</strong> Предварительные требования</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="submenu">
+                                <li><button class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li><button class="theme" id="rust">Rust</button></li>
+                                <li><button class="theme" id="coal">Coal</button></li>
+                                <li><button class="theme" id="navy">Navy</button></li>
+                                <li><button class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                        </div>
+
+                        <h1 class="menu-title">Всё о WebAssembly и Rust</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="wasm-design/src/1-goals.html#Главные-цели-webassembly" id="Главные-цели-webassembly"><h1>Главные цели WebAssembly</h1></a>
+<ol>
+<li>
+<p>Определить <a href="https://webassembly.org/docs/portability/">преносимый</a>, эфективный по размеру и времени закгрузки <a href="https://webassembly.org/docs/mvp/#binary-format">двоичный формат</a>, который будет целью для компиляции, и может быть скомпилированым для выолнения на собственной скорости с использованием общих аппаратных возможностей, доступный на широком спекте платформы, включая мобильные устройсвта и интернет вещей</p>
+</li>
+<li>
+<p>Пошаговая спецификация и реализация:</p>
+</li>
+</ol>
+<ul>
+<li>
+<p><a href="https://webassembly.org/docs/mvp/">Minimum Viable Product</a> (MVP) для стандарта с приблизительно похожей функциональности как в <a href="http://asmjs.org/">asm.js</a>, главным образом направленная на <a href="https://webassembly.org/docs/c-and-c++/">C/C++</a>;</p>
+</li>
+<li>
+<p><a href="https://webassembly.org/docs/future-features/">дополнительные функции</a> - изначально ориентированные на ключевые функции, такие как <a href="https://github.com/WebAssembly/design/issues/1073">потоки</a>, <a href="https://github.com/WebAssembly/design/issues/1078">исключения с нулевой стоимостью</a>, и <a href="https://github.com/WebAssembly/design/issues/1075">SIMD</a>, а затем дополнительные функции, приоритетные по откхывам и включащие поддержку языков, отличных от C/C++.</p>
+</li>
+</ul>
+<ol start="3">
+<li>Спроектировано для выполнения внутри и с интеграцией с существующей <a href="https://webassembly.org/docs/web/">веб-платформой</a>:</li>
+</ol>
+<ul>
+<li>
+<p>maintain the versionless, <a href="https://webassembly.org/docs/feature-test/">feature-tested</a> и обратной совсместимости в эволюции в веб;</p>
+</li>
+<li>
+<p>исполнение в том же семантическом пространстве, что и JavaScript;</p>
+</li>
+<li>
+<p>позволять синхронные вызовы в и из JavaScript;</p>
+</li>
+<li>
+<p>осуществить единство проихождения (same-origin) и разрешений политик безопасности;</p>
+</li>
+<li>
+<p>доступ к функциональности браузера через теже веб API, которые доступны JavaScript;</p>
+</li>
+<li>
+<p>определить редактируемый человеком текстовый формат, который конвертируется в двоичный формат и из него, поддерживая фукнциональность View Source.</p>
+</li>
+</ul>
+<ol start="4">
+<li>
+<p>Проектировно для поддержки <a href="https://webassembly.org/docs/non-web/">внебразуерного</a> встраивания.</p>
+</li>
+<li>
+<p>Создание великой платформы:</p>
+</li>
+</ol>
+<ul>
+<li>построить новый LLVM бэкенд для WebAssembly и сопутсвующее портирование clang (<a href="https://webassembly.org/docs/faq/#which-compilers-can-i-use-to-build-webassembly-programs">почему LLVM первый?</a>);</li>
+<li>продвижение других компиляторов и инструментов ориентированных на WebAssembly;</li>
+<li>включить другие полезные <a href="https://webassembly.org/docs/tooling/">инструменты</a>.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="wasm-design/src/README.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="rustwasm/book/README.html" class="mobile-nav-chapters next" title="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="wasm-design/src/README.html" class="nav-chapters previous" title="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="rustwasm/book/README.html" class="nav-chapters next" title="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if (getComputedStyle(document.querySelector(".fa")).fontFamily !== "FontAwesome") {
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = '_FontAwesome/css/font-awesome.css';
+                document.head.insertBefore(link, document.head.firstChild)
+            }
+        </script>
+
+        
+
+        
+
+        
+
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
+    </body>
+</html>

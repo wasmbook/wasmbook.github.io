@@ -2,4 +2,4 @@
 authors = ["Eliot Krone"]
 multilingual = false
 src = "src"
-title = "Всё о WebAssembly"
+title = "Всё о WebAssembly и Rust"
