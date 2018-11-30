@@ -4,13 +4,13 @@
 
 ## Для кого эта книга?
 
-This book is for anyone interested in compiling Rust to WebAssembly for fast, reliable code on the Web. You should know some Rust, and be familiar with JavaScript, HTML, and CSS. You don't need to be an expert in any of them.
+Эта книга для всех, кто интересуется компиляцией Rust в WebAssembly для быстрого и надежного кода в Web. Вы должны знать Rust и быть знакомым с JavaScript, HTML и CSS. Вам не нужно быть экспертом в них.
 
-Don't know Rust yet? [Start with *The Rust Programming Language* first.][trpl]
+Ещё не знаете Rust? [Начните с книги *Язык программирования Rust.][trpl]
 
-Don't know JavaScript, HTML, or CSS? [Learn about them on MDN.][mdn]
+Не знаете JavaScript, HTML или CSS? [Почитать об этом можете на MDN.][mdn]
 
-## How to read this book
+## Как читать эту книгу
 
 You should read [the motivation for using Rust and WebAssembly together][why-rust-wasm], as well as familiarize yourself with the [background
 and concepts][background] first.
@@ -23,7 +23,7 @@ The [reference sections][reference] may be perused in any order.
 
 ## Contributing to this book
 
-This book is open source! Find a typo? Did we overlook something? [**Send us a pull request!**][repo]
+Эта книга с отрытым исходным кодом! Нашли опечатку? Did we overlook something? [**Send us a pull request!**][repo]
 
 [Rust]: https://www.rust-lang.org
 [WebAssembly]: https://webassembly.org/
